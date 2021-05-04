@@ -4,7 +4,9 @@ import TextareaAutosize from 'react-textarea-autosize';
 
 var message;
 var category;
+var username;
 var id_num = 0;
+
 export default function Home() {
   return (
     <div className="container mx-auto">
@@ -12,11 +14,13 @@ export default function Home() {
       <div className="container mx-auto w-2/3">
         <div className="mt-10 mb-5">
           <form onSubmit={handleSubmit}>
-            <TextareaAutosize id="text-form" value={message} onChange={handleChange} className="text-gray-500 outline-none hover:border-gray-400 border py-2 px-3 resize-none overflow-hidden w-full" maxRows={6} minRows={1}></TextareaAutosize>
+            <TextareaAutosize id="text-form" value={message} onChange={handleChange} className="text-gray-500 outline-none hover:border-gray-400 border py-2 px-3 resize-none overflow-hidden w-full rounded" maxRows={6} minRows={1}></TextareaAutosize>
             <div className="text-right">
-              <select name="category" value={category} onChange={handleChange2} className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-3 rounded">
+              <input type="text" placeholder="名前を入力してください" value={username} size="15" onChange={handleChange2} className="border-gray-400 border text-gray-400 py-2 px-3 rounded"/>
+              <select name="category" value={category} onChange={handleChange3} className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-3 rounded">
                 <option value="recruit">就職・転職</option>
                 <option value="work">仕事・人間関係</option>
+                <option value="tech">技術相談</option>
                 <option value="hobby">趣味</option>
                 <option value="other">その他</option>
               </select>
@@ -37,6 +41,10 @@ const handleChange = (e) => {
 
 const handleChange2 = (e) => {
   console.log(e.target.value);
+  username = e.target.value;
+};
+
+const handleChange3 = (e) => {
   category = e.target.value;
 };
 
@@ -60,14 +68,22 @@ const handleSubmit = (e) => {
     var p_message = document.createElement("p");
     if (!category) category = "recruit";
 
+    if (!username) {
+      username = "";
+    } else {
+      username = username + "さん";
+    }
+
     if (category == "recruit") {
-      p_message.textContent = message + "\n" + "(" +  "カテゴリ: " + "就職・転職" + ")";
+      p_message.textContent = message + "\n" + username + "(" +  "カテゴリ: " + "就職・転職" + ")";
     } else if (category == "work") {
-      p_message.textContent = message + "\n" + "(" +  "カテゴリ: " + "仕事・人間関係" + ")";
+      p_message.textContent = message + "\n" + username + "(" +  "カテゴリ: " + "仕事・人間関係" + ")";
+    } else if (category == "tech") {
+      p_message.textContent = message + "\n" + username + "(" +  "カテゴリ: " + "技術相談" + ")";
     } else if (category == "hobby") {
-      p_message.textContent = message + "\n" + "(" +  "カテゴリ: " + "趣味" + ")";
+      p_message.textContent = message + "\n" + username + "(" +  "カテゴリ: " + "趣味" + ")";
     } else if (category == "other") {
-      p_message.textContent = message + "\n" + "(" +  "カテゴリ: " + "その他" + ")";
+      p_message.textContent = message + "\n" + username + "(" +  "カテゴリ: " + "その他" + ")";
     }
     var ma = document.getElementById("message-area");
     p_message.id = "ma_id" + id_num.toString();
