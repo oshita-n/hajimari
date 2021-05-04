@@ -16,7 +16,7 @@ export default function Home() {
           <form onSubmit={handleSubmit}>
             <TextareaAutosize id="text-form" value={message} onChange={handleChange} className="text-gray-500 outline-none hover:border-gray-400 border py-2 px-3 resize-none overflow-hidden w-full rounded" maxRows={6} minRows={1}></TextareaAutosize>
             <div className="text-right">
-              <input type="text" placeholder="名前を入力してください" value={username} size="15" onChange={handleChange2} className="border-gray-400 border text-gray-400 py-2 px-3 rounded"/>
+              <input type="text" placeholder="名前を入力できます" value={username} size="15" onChange={handleChange2} className="border-gray-400 border text-gray-400 py-2 px-3 rounded"/>
               <select name="category" value={category} onChange={handleChange3} className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-3 rounded">
                 <option value="recruit">就職・転職</option>
                 <option value="work">仕事・人間関係</option>
