@@ -3,6 +3,7 @@ import { Header } from '../src/components/Header.js'
 import TextareaAutosize from 'react-textarea-autosize';
 
 var message;
+var category;
 var id_num = 0;
 export default function Home() {
   return (
@@ -13,13 +14,18 @@ export default function Home() {
           <form onSubmit={handleSubmit}>
             <TextareaAutosize id="text-form" value={message} onChange={handleChange} className="text-gray-500 outline-none hover:border-gray-400 border py-2 px-3 resize-none overflow-hidden w-full" maxRows={6} minRows={1}></TextareaAutosize>
             <div className="text-right">
-              <input type="submit" className=" ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded" value="投稿する" />  
+              <select name="category" value={category} onChange={handleChange2} className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-3 rounded">
+                <option value="recruit">就職・転職</option>
+                <option value="work">仕事・人間関係</option>
+                <option value="hobby">趣味</option>
+                <option value="other">その他</option>
+              </select>
+              <input type="submit" className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded" value="投稿する" />  
             </div>
           </form>
         </div>
         <div id="message-area" className=""></div>
       </div>
-      
       <Footer />
   </div>
   )
@@ -27,6 +33,11 @@ export default function Home() {
 
 const handleChange = (e) => {
   message = e.target.value;
+};
+
+const handleChange2 = (e) => {
+  console.log(e.target.value);
+  category = e.target.value;
 };
 
 const handleSubmit = (e) => {
@@ -47,7 +58,17 @@ const handleSubmit = (e) => {
     e.preventDefault();
     document.getElementById("text-form").value = "";
     var p_message = document.createElement("p");
-    p_message.textContent = message;
+    if (!category) category = "recruit";
+
+    if (category == "recruit") {
+      p_message.textContent = message + "\n" + "(" +  "カテゴリ: " + "就職・転職" + ")";
+    } else if (category == "work") {
+      p_message.textContent = message + "\n" + "(" +  "カテゴリ: " + "仕事・人間関係" + ")";
+    } else if (category == "hobby") {
+      p_message.textContent = message + "\n" + "(" +  "カテゴリ: " + "趣味" + ")";
+    } else if (category == "other") {
+      p_message.textContent = message + "\n" + "(" +  "カテゴリ: " + "その他" + ")";
+    }
     var ma = document.getElementById("message-area");
     p_message.id = "ma_id" + id_num.toString();
     id_num + id_num + 1;
