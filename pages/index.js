@@ -32,7 +32,7 @@ const handleSubmit = (e) => {
   var ma = document.getElementById("message-area");
   p_message.id = "ma_id" + id_num.toString();
   id_num + id_num + 1;
-  p_message.className = "xl:left-52 relative mt-3 text-xl  text-gray-400 whitespace-pre-wrap";
+  p_message.className = "hover:text-gray-500 ml-3 xl:left-52 relative mt-3 text-xl  text-gray-400 whitespace-pre-wrap";
   var hr = document.createElement("hr");
   hr.className = "text-center xl:w-4/6 xl:left-52 relative border-dotted";
   ma.after(hr);
