@@ -30,16 +30,33 @@ const handleChange = (e) => {
 };
 
 const handleSubmit = (e) => {
-  e.preventDefault();
-  document.getElementById("text-form").value = "";
-  var p_message = document.createElement("p");
-  p_message.textContent = message;
-  var ma = document.getElementById("message-area");
-  p_message.id = "ma_id" + id_num.toString();
-  id_num + id_num + 1;
-  p_message.className = "hover:text-gray-500 mt-3 text-xl text-gray-400 whitespace-pre-wrap";
-  var hr = document.createElement("hr");
-  hr.className = "border-dotted";
-  ma.after(hr);
-  ma.after(p_message);
+  if (message == "" || !message || !message.match(/\S/g)){
+    e.preventDefault();
+    var tf = document.getElementById("text-form");
+    tf.style.backgroundColor = "#E5E7EB";
+    const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
+    (async () => {
+      await sleep(100);
+      tf.style.backgroundColor = "#FFFFFF";
+      await sleep(100);
+      tf.style.backgroundColor = "#E5E7EB";
+      await sleep(100);
+      tf.style.backgroundColor = "#FFFFFF";
+    })();
+  } else {
+    e.preventDefault();
+    document.getElementById("text-form").value = "";
+    var p_message = document.createElement("p");
+    p_message.textContent = message;
+    var ma = document.getElementById("message-area");
+    p_message.id = "ma_id" + id_num.toString();
+    id_num + id_num + 1;
+    p_message.className = "hover:text-gray-500 mt-3 text-xl text-gray-400 whitespace-pre-wrap";
+    var hr = document.createElement("hr");
+    hr.className = "border-dotted";
+    ma.after(hr);
+    ma.after(p_message);
+    p_message = ""
+    message = ""
+  }
 };
