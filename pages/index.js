@@ -1,6 +1,9 @@
 import { Footer } from '../src/components/Footer.js'
 import { Header } from '../src/components/Header.js'
 import TextareaAutosize from 'react-textarea-autosize';
+import AgendaLink from '../src/components/AgendaLink.js';
+import ReactDOM from 'react-dom';
+import Agenda from './agenda.js';
 
 var message;
 var category;
@@ -28,7 +31,9 @@ export default function Home() {
             </div>
           </form>
         </div>
-        <div id="message-area" className=""></div>
+        <div id="message-area" className="">
+          <AgendaLink message="test" />
+        </div>
       </div>
       <Footer />
   </div>
@@ -65,16 +70,15 @@ const handleSubmit = (e) => {
   } else {
     e.preventDefault();
     document.getElementById("text-form").value = "";
-    var p_message = document.createElement("p");
+    var p_message = document.createElement("AgendaLink");
     if (!category) category = "recruit";
 
     if (!username) {
       username = "";
-    } else {
-      username = username + "さん";
     }
-
     if (category == "recruit") {
+      //ReactDOM.render(<AgendaLink message={message + "\n" + username + "(" +  "カテゴリ: " + "就職・転職" + ")"}/>, p_message);
+      //p_message.message = message + "\n" + username + "(" +  "カテゴリ: " + "就職・転職" + ")";
       p_message.textContent = message + "\n" + username + "(" +  "カテゴリ: " + "就職・転職" + ")";
     } else if (category == "work") {
       p_message.textContent = message + "\n" + username + "(" +  "カテゴリ: " + "仕事・人間関係" + ")";
@@ -87,8 +91,9 @@ const handleSubmit = (e) => {
     }
     var ma = document.getElementById("message-area");
     p_message.id = "ma_id" + id_num.toString();
-    id_num + id_num + 1;
+    id_num = id_num + 1;
     p_message.className = "hover:text-gray-500 mt-3 text-xl text-gray-400 whitespace-pre-wrap";
+
     var hr = document.createElement("hr");
     hr.className = "border-dotted";
     ma.after(hr);
