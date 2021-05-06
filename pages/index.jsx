@@ -1,14 +1,16 @@
-import { Footer } from '../src/components/Footer.js'
-import { Header } from '../src/components/Header.js'
+import { Footer } from '../src/components/Footer.js';
+import { Header } from '../src/components/Header.js';
 import TextareaAutosize from 'react-textarea-autosize';
 import AgendaLink from '../src/components/AgendaLink.js';
 import ReactDOM from 'react-dom';
-import Agenda from './agenda.js';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 
-var message;
+var agendaMessage;
 var category;
 var username;
 var id_num = 0;
+
 
 export default function Home() {
   return (
@@ -17,7 +19,7 @@ export default function Home() {
       <div className="container mx-auto w-2/3">
         <div className="mt-10 mb-5">
           <form onSubmit={handleSubmit}>
-            <TextareaAutosize id="text-form" value={message} onChange={handleChange} className="text-gray-500 outline-none hover:border-gray-400 border py-2 px-3 resize-none overflow-hidden w-full rounded" maxRows={6} minRows={1}></TextareaAutosize>
+            <TextareaAutosize id="text-form" placeholder="質問内容を書いてください" value={agendaMessage} onChange={handleChange} className="text-gray-500 outline-none hover:border-gray-400 border py-2 px-3 resize-none overflow-hidden w-full rounded" maxRows={6} minRows={1}></TextareaAutosize>
             <div className="text-right">
               <input type="text" placeholder="名前を入力できます" value={username} size="15" onChange={handleChange2} className="outline-none hover:border-gray-400 border border text-gray-400 py-2 px-3 rounded"/>
               <select name="category" value={category} onChange={handleChange3} className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-3 rounded">
@@ -31,8 +33,7 @@ export default function Home() {
             </div>
           </form>
         </div>
-        <div id="message-area" className="">
-          <AgendaLink message="test" />
+        <div id="message-area">
         </div>
       </div>
       <Footer />
@@ -41,7 +42,7 @@ export default function Home() {
 }
 
 const handleChange = (e) => {
-  message = e.target.value;
+  agendaMessage = e.target.value;
 };
 
 const handleChange2 = (e) => {
@@ -54,7 +55,7 @@ const handleChange3 = (e) => {
 };
 
 const handleSubmit = (e) => {
-  if (message == "" || !message || !message.match(/\S/g)){
+  if (agendaMessage == "" || !agendaMessage || !agendaMessage.match(/\S/g)){
     e.preventDefault();
     var tf = document.getElementById("text-form");
     tf.style.backgroundColor = "#E5E7EB";
@@ -70,7 +71,7 @@ const handleSubmit = (e) => {
   } else {
     e.preventDefault();
     document.getElementById("text-form").value = "";
-    var p_message = document.createElement("AgendaLink");
+    //var p_message = document.createElement("AgendaLink");
     if (!category) category = "recruit";
 
     if (!username) {
@@ -79,26 +80,36 @@ const handleSubmit = (e) => {
     if (category == "recruit") {
       //ReactDOM.render(<AgendaLink message={message + "\n" + username + "(" +  "カテゴリ: " + "就職・転職" + ")"}/>, p_message);
       //p_message.message = message + "\n" + username + "(" +  "カテゴリ: " + "就職・転職" + ")";
-      p_message.textContent = message + "\n" + username + "(" +  "カテゴリ: " + "就職・転職" + ")";
+      //p_message.textContent = message + "\n" + username + "(" +  "カテゴリ: " + "就職・転職" + ")";
     } else if (category == "work") {
-      p_message.textContent = message + "\n" + username + "(" +  "カテゴリ: " + "仕事・人間関係" + ")";
+      //p_message.textContent = message + "\n" + username + "(" +  "カテゴリ: " + "仕事・人間関係" + ")";
     } else if (category == "tech") {
-      p_message.textContent = message + "\n" + username + "(" +  "カテゴリ: " + "技術相談" + ")";
+      //p_message.textContent = message + "\n" + username + "(" +  "カテゴリ: " + "技術相談" + ")";
     } else if (category == "hobby") {
-      p_message.textContent = message + "\n" + username + "(" +  "カテゴリ: " + "趣味" + ")";
+      //p_message.textContent = message + "\n" + username + "(" +  "カテゴリ: " + "趣味" + ")";
     } else if (category == "other") {
-      p_message.textContent = message + "\n" + username + "(" +  "カテゴリ: " + "その他" + ")";
+      //p_message.textContent = message + "\n" + username + "(" +  "カテゴリ: " + "その他" + ")";
     }
-    var ma = document.getElementById("message-area");
-    p_message.id = "ma_id" + id_num.toString();
-    id_num = id_num + 1;
-    p_message.className = "hover:text-gray-500 mt-3 text-xl text-gray-400 whitespace-pre-wrap";
 
+
+    var ma = document.getElementById("message-area");
+    //p_message.id = "ma_id" + id_num.toString();
+    //p_message.className = "hover:text-gray-500 mt-3 text-xl text-gray-400 whitespace-pre-wrap";
+    let el = 
+      <Router>
+        <Link to="/agenda">
+          <p className="hover:text-gray-500 mt-3 text-xl text-gray-400 whitespace-pre-wrap">{agendaMessage}</p>
+        </Link>
+        <Route exact path='/agenda' render={ () => <AgendaLink message={agendaMessage} /> }/>
+      </Router>
+        
+    ReactDOM.render(el, ma);
     var hr = document.createElement("hr");
     hr.className = "border-dotted";
     ma.after(hr);
-    ma.after(p_message);
-    p_message = ""
-    message = ""
+    //ma.after(p_message);
+    //p_message = ""
+    agendaMessage = "";
+    id_num = id_num + 1;
   }
 };
