@@ -101,6 +101,7 @@ export default function Home() {
                   <p className="hover:text-gray-500 mt-3 text-xl text-gray-400 whitespace-pre-wrap">{message}</p>
                 </a>
               </Link>
+              <hr />
             </div>
           ))}
         </div>
