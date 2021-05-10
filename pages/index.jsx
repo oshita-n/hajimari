@@ -2,16 +2,46 @@ import { Footer } from '../src/components/Footer.js';
 import { Header } from '../src/components/Header.js';
 import TextareaAutosize from 'react-textarea-autosize';
 import Link from 'next/link'
-import { useState } from 'react'
-
+import { useState, useEffect } from 'react'
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore'
 
 var category;
 var username;
+require('dotenv').config({path: "../.env"})
+// Initialize Cloud Firestore through Firebase
+if (firebase.apps.length === 0) {
+  firebase.initializeApp({
+    apiKey: process.env.NEXT_PUBLIC_APIKEY,
+    authDomain: process.env.NEXT_PUBLIC_DOMAIN,
+    projectId: process.env.NEXT_PUBLIC_ID
+  });
+}
 
+var docsData = [];
+var db = firebase.firestore();
+// Dateオブジェクトを作成
+var date = new Date() ;
 
 export default function Home() {
   const [agendaMessages, setAgendaMessages] = useState([]);
   const [agendaMessage, setAgendaMessage] = useState("");
+  
+  // マウント時に一回だけ実行する
+  useEffect(() => { 
+    console.log(docsData.length);
+    if (docsData.length === 0) {
+      db.collection("message").get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            docsData.push(doc.data().message);
+        });
+        setAgendaMessages((agendaMessages) => [...agendaMessages, ...docsData]);
+      });
+    }
+    setAgendaMessages((agendaMessages) => [...agendaMessages, ...docsData]);
+   }, []);
 
   const handleChange = (e) => {
     setAgendaMessage(e.target.value);
@@ -42,32 +72,38 @@ export default function Home() {
       })();
     } else {
       e.preventDefault();
-      setAgendaMessages([agendaMessage, ...agendaMessages]);
+      setAgendaMessages((agendaMessages) => [agendaMessage, ...agendaMessages]);
+
       document.getElementById("text-form").value = "";
-      // if (!category) category = "recruit";
 
-      // if (!username) {
-      //   username = "";
-      // }
-      // if (category == "recruit") {
-
-      // } else if (category == "work") {
-      // } else if (category == "tech") {
-      // } else if (category == "hobby") {
-      // } else if (category == "other") {
-      // }
-
-
-      // var ma = document.getElementById("message-area");
-      //p_message.id = "ma_id" + id_num.toString();
-      //p_message.className = "hover:text-gray-500 mt-3 text-xl text-gray-400 whitespace-pre-wrap";
       
-      // var hr = document.createElement("hr");
-      // hr.className = "border-dotted";
-      // ma.after(hr);
-      //ma.after(p_message);
-      //p_message = ""
-      //id_num = id_num + 1;
+      if (!category) category = "recruit";
+
+      if (!username) {
+        username = "";
+      }
+      if (category == "recruit") {
+
+      } else if (category == "work") {
+      } else if (category == "tech") {
+      } else if (category == "hobby") {
+      } else if (category == "other") {
+      }
+
+      db.collection("message").add({
+        message: agendaMessage,
+        username: username,
+        category: category,
+        timestamp:date.getTime()
+      })
+      .then(() => {
+          console.log("Document written");
+      })
+      .catch((error) => {
+          console.error("Error adding document: ", error);
+      });
+
+      setAgendaMessage("")
     }
   };
   return (
