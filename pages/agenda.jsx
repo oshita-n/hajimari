@@ -7,7 +7,7 @@ export default function Agenda() {
     return (
         <div>
             <Layout>
-                <h1 className="mt-10 text-center text-3xl">{router.query.message}</h1>
+                <h1 className="font-bold mt-10 text-center text-3xl">{router.query.message}</h1>
             </Layout>
         </div>
     );

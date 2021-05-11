@@ -9,7 +9,7 @@ export default ({ children }) => (
         <a><button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded"><div class={ styles.triangle }></div>投稿する</button></a>
       </Link>
     </div>
-    <div className="container mx-auto bg-pink-200 w-3/6 h-96 rounded py-32">
+    <div className="container mx-auto bg-blue-200 w-3/6 h-96 rounded py-32">
       {children}
     </div>
     
