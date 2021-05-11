@@ -119,3 +119,11 @@
     flex-direction: column;
   }
 }
+
+.triangle {
+  display: inline-block;
+  border-style: solid;
+  border-width: 8px 15px 8px 0;
+  border-color: transparent rgb(105, 104, 104) transparent transparent;
+  margin-right: 10px;
+}
