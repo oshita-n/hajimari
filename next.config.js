@@ -1,3 +1,4 @@
+require('dotenv').config({path: ".env"})
 module.exports = {
     webpack: (config, { isServer }) => {
       if (!isServer) {
