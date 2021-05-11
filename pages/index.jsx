@@ -134,7 +134,7 @@ export default function Home() {
                 query: { message: message },
               }}>
                 <a>
-                  <p className="hover:text-gray-500 mt-2 mb-2 text-xl text-black whitespace-pre-wrap">{message}</p>
+                  <p className="hover:text-gray-600 mt-2 mb-2 text-xl text-gray-500 whitespace-pre-wrap">{message}</p>
                 </a>
               </Link>
               <hr />
