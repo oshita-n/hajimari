@@ -30,17 +30,14 @@ export default function Home() {
   
   // マウント時に一回だけ実行する
   useEffect(() => { 
-    console.log(docsData.length);
-    if (docsData.length === 0) {
-      db.collection("message").get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            docsData.push(doc.data().message);
-        });
-        setAgendaMessages((agendaMessages) => [...agendaMessages, ...docsData]);
+    docsData = []
+    db.collection("message").get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          docsData.push(doc.data().message);
       });
-    }
-    setAgendaMessages((agendaMessages) => [...agendaMessages, ...docsData]);
+      setAgendaMessages((agendaMessages) => [...agendaMessages, ...docsData]);
+    });
    }, []);
 
   const handleChange = (e) => {
