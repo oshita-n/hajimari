@@ -112,9 +112,9 @@ export default function Home() {
       <div className="container mx-auto w-2/3">
         <div className="mt-10 mb-5">
           <form onSubmit={handleSubmit}>
-            <TextareaAutosize id="text-form" placeholder="質問内容を書いてください" onChange={handleChange} className="text-gray-500 outline-none hover:border-gray-400 border py-2 px-3 resize-none overflow-hidden w-full rounded" maxRows={6} minRows={1}></TextareaAutosize>
+            <TextareaAutosize id="text-form" placeholder="質問内容を書いてください" onChange={handleChange} className="text-black outline-none hover:border-gray-400 border py-2 px-3 resize-none overflow-hidden w-full rounded" maxRows={6} minRows={1}></TextareaAutosize>
             <div className="text-right">
-              <input type="text" placeholder="名前を入力できます" value={username} size="15" onChange={handleChange2} className="outline-none hover:border-gray-400 border border text-gray-400 py-2 px-3 rounded"/>
+              <input type="text" placeholder="名前を入力できます" value={username} size="15" onChange={handleChange2} className="outline-none hover:border-gray-400 border border text-black py-2 px-3 rounded"/>
               <select name="category" value={category} onChange={handleChange3} className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-3 rounded">
                 <option value="recruit">就職・転職</option>
                 <option value="work">仕事・人間関係</option>
@@ -134,7 +134,7 @@ export default function Home() {
                 query: { message: message },
               }}>
                 <a>
-                  <p className="hover:text-gray-500 mt-3 text-xl text-gray-400 whitespace-pre-wrap">{message}</p>
+                  <p className="hover:text-gray-500 mt-2 mb-2 text-xl text-black whitespace-pre-wrap">{message}</p>
                 </a>
               </Link>
               <hr />
