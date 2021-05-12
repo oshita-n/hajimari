@@ -105,42 +105,44 @@ export default function Home() {
     }
   };
   return (
-    <div className="container mx-auto">
+    <div>
       <Header />
-      <div className="container mx-auto w-2/3">
-        <div className="mt-10 mb-5">
-          <form onSubmit={handleSubmit}>
-            <TextareaAutosize id="text-form" placeholder="質問内容を書いてください" onChange={handleChange} className="text-black outline-none hover:border-gray-400 border py-2 px-3 resize-none overflow-hidden w-full rounded" maxRows={6} minRows={1}></TextareaAutosize>
-            <div className="text-right">
-              <input type="text" placeholder="名前を入力できます" value={username} size="15" onChange={handleChange2} className="outline-none hover:border-gray-400 border border text-black py-2 px-3 rounded"/>
-              <select name="category" value={category} onChange={handleChange3} className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-3 rounded">
-                <option value="recruit">就職・転職</option>
-                <option value="work">仕事・人間関係</option>
-                <option value="tech">技術相談</option>
-                <option value="hobby">趣味</option>
-                <option value="other">その他</option>
-              </select>
-              <input type="submit" className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded" value="投稿する" />  
-            </div>
-          </form>
+      <div className="container mx-auto">
+        <div className="container mx-auto w-2/3">
+          <div className="mt-10 mb-5">
+            <form onSubmit={handleSubmit}>
+              <TextareaAutosize id="text-form" placeholder="質問内容を書いてください" onChange={handleChange} className="text-black outline-none hover:border-gray-400 border py-2 px-3 resize-none overflow-hidden w-full rounded" maxRows={6} minRows={1}></TextareaAutosize>
+              <div className="text-right">
+                <input type="text" placeholder="名前を入力できます" value={username} size="15" onChange={handleChange2} className="outline-none hover:border-gray-400 border border text-black py-2 px-3 rounded"/>
+                <select name="category" value={category} onChange={handleChange3} className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-3 rounded">
+                  <option value="recruit">就職・転職</option>
+                  <option value="work">仕事・人間関係</option>
+                  <option value="tech">技術相談</option>
+                  <option value="hobby">趣味</option>
+                  <option value="other">その他</option>
+                </select>
+                <input type="submit" className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded" value="投稿する" />  
+              </div>
+            </form>
+          </div>
+          <div id="message-area">
+            {agendaMessages.length !== 0 && agendaMessages.map((message) => (
+              <div key={message}>
+                <Link href={{
+                  pathname: '/agenda',
+                  query: { message: message },
+                }}>
+                  <a>
+                    <p className="hover:text-gray-600 mt-2 mb-2 text-xl text-gray-500 whitespace-pre-wrap">{message}</p>
+                  </a>
+                </Link>
+                <hr />
+              </div>
+            ))}
+          </div>
         </div>
-        <div id="message-area">
-          {agendaMessages.length !== 0 && agendaMessages.map((message) => (
-            <div key={message}>
-              <Link href={{
-                pathname: '/agenda',
-                query: { message: message },
-              }}>
-                <a>
-                  <p className="hover:text-gray-600 mt-2 mb-2 text-xl text-gray-500 whitespace-pre-wrap">{message}</p>
-                </a>
-              </Link>
-              <hr />
-            </div>
-          ))}
-        </div>
-      </div>
-      <Footer />
+        <Footer />
+    </div>
   </div>
   )
   
