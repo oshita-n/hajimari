@@ -19,10 +19,9 @@ if (firebase.apps.length === 0) {
   });
 }
 
-var docsData = [];
+var docsData = new Array();;
 var db = firebase.firestore();
 // Dateオブジェクトを作成
-var date = new Date() ;
 
 export default function Home() {
   const [agendaMessages, setAgendaMessages] = useState([]);
@@ -30,13 +29,22 @@ export default function Home() {
   
   // マウント時に一回だけ実行する
   useEffect(() => { 
-    docsData = []
+    docsData = new Array();
+    let i = 0;
     db.collection("message").get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          docsData.push(doc.data().message);
+        // doc.data() is never undefined for query doc snapshots
+        docsData[i] = {};
+        docsData[i]['message'] = doc.data().message;
+        docsData[i]['timestamp'] = doc.data().timestamp
+        i++;
       });
-      setAgendaMessages((agendaMessages) => [...agendaMessages, ...docsData]);
+      docsData.sort(function(x, y){
+        return y.timestamp - x.timestamp;
+      });
+      docsData.forEach((doc) => {
+        setAgendaMessages((agendaMessages) => [...agendaMessages, doc.message]);
+      });
     });
    }, []);
 
@@ -79,19 +87,12 @@ export default function Home() {
       if (!username) {
         username = "";
       }
-      if (category == "recruit") {
-
-      } else if (category == "work") {
-      } else if (category == "tech") {
-      } else if (category == "hobby") {
-      } else if (category == "other") {
-      }
-
+      let date = new Date();
       db.collection("message").add({
         message: agendaMessage,
         username: username,
         category: category,
-        timestamp:date.getTime()
+        timestamp: date.getTime()
       })
       .then(() => {
           console.log("Document written");
