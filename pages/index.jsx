@@ -1,144 +1,50 @@
 import { Footer } from '../src/components/Footer.js';
 import { Header } from '../src/components/Header.js';
 import TextareaAutosize from 'react-textarea-autosize';
-import Link from 'next/link'
-import { useState, useEffect } from 'react'
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore'
-
-var category;
-var username;
-require('dotenv').config({path: "../.env"})
-// Initialize Cloud Firestore through Firebase
-if (firebase.apps.length === 0) {
-  firebase.initializeApp({
-    apiKey: process.env.NEXT_PUBLIC_APIKEY,
-    authDomain: process.env.NEXT_PUBLIC_DOMAIN,
-    projectId: process.env.NEXT_PUBLIC_ID
-  });
-}
-
-var docsData = new Array();;
-var db = firebase.firestore();
-// Dateオブジェクトを作成
+import { useState, useEffect } from 'react';
+import textToSpeech from '@google-cloud/text-to-speech';
+import fs from 'fs';
+import util from 'util';
 
 export default function Home() {
-  const [agendaMessages, setAgendaMessages] = useState([]);
+
+  const client = new textToSpeech.TextToSpeechClient();
+
   const [agendaMessage, setAgendaMessage] = useState("");
-  
-  // マウント時に一回だけ実行する
-  useEffect(() => { 
-    docsData = new Array();
-    let i = 0;
-    db.collection("message").get().then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        docsData[i] = {};
-        docsData[i]['message'] = doc.data().message;
-        docsData[i]['timestamp'] = doc.data().timestamp
-        i++;
-      });
-      docsData.sort(function(x, y){
-        return y.timestamp - x.timestamp;
-      });
-      docsData.forEach((doc) => {
-        setAgendaMessages((agendaMessages) => [...agendaMessages, doc.message]);
-      });
-    });
-   }, []);
 
   const handleChange = (e) => {
     setAgendaMessage(e.target.value);
   };
 
-  const handleChange2 = (e) => {
-    console.log(e.target.value);
-    username = e.target.value;
+  async function quickStart() {
+    // Construct the request
+    const request = {
+      input: {text: agendaMessage},
+      // Select the language and SSML voice gender (optional)
+      voice: {languageCode: 'ja-JP', ssmlGender: 'MALE'},
+      // select the type of audio encoding
+      audioConfig: {audioEncoding: 'MP3'},
+    };
+
+    // Performs the text-to-speech request
+    const [response] = await client.synthesizeSpeech(request);
+    // Write the binary audio content to a local file
+    const writeFile = util.promisify(fs.writeFile);
+    await writeFile('output.mp3', response.audioContent, 'binary');
+    console.log('Audio content written to file: output.mp3');
   };
 
-  const handleChange3 = (e) => {
-    category = e.target.value;
-  };
-
-  const handleSubmit = (e) => {
-    if (agendaMessage == "" || !agendaMessage || !agendaMessage.match(/\S/g)){
-      e.preventDefault();
-      var tf = document.getElementById("text-form");
-      tf.style.backgroundColor = "#E5E7EB";
-      const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
-      (async () => {
-        await sleep(100);
-        tf.style.backgroundColor = "#FFFFFF";
-        await sleep(100);
-        tf.style.backgroundColor = "#E5E7EB";
-        await sleep(100);
-        tf.style.backgroundColor = "#FFFFFF";
-      })();
-    } else {
-      e.preventDefault();
-      setAgendaMessages((agendaMessages) => [agendaMessage, ...agendaMessages]);
-
-      document.getElementById("text-form").value = "";
-
-      
-      if (!category) category = "recruit";
-
-      if (!username) {
-        username = "";
-      }
-      let date = new Date();
-      db.collection("message").add({
-        message: agendaMessage,
-        username: username,
-        category: category,
-        timestamp: date.getTime()
-      })
-      .then(() => {
-          console.log("Document written");
-      })
-      .catch((error) => {
-          console.error("Error adding document: ", error);
-      });
-
-      setAgendaMessage("")
-    }
-  };
   return (
     <div>
       <Header />
       <div className="container mx-auto">
         <div className="container mx-auto w-2/3">
           <div className="mt-10 mb-5">
-            <form onSubmit={handleSubmit}>
-              <TextareaAutosize id="text-form" placeholder="質問内容を書いてください" onChange={handleChange} className="text-black outline-none hover:border-gray-400 border py-2 px-3 resize-none overflow-hidden w-full rounded" maxRows={6} minRows={1}></TextareaAutosize>
-              <div className="text-right">
-                <input type="text" placeholder="名前を入力できます" value={username} size="15" onChange={handleChange2} className="outline-none hover:border-gray-400 border border text-black py-2 px-3 rounded"/>
-                <select name="category" value={category} onChange={handleChange3} className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-3 rounded">
-                  <option value="recruit">就職・転職</option>
-                  <option value="work">仕事・人間関係</option>
-                  <option value="tech">技術相談</option>
-                  <option value="hobby">趣味</option>
-                  <option value="other">その他</option>
-                </select>
-                <input type="submit" className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded" value="投稿する" />  
-              </div>
-            </form>
-          </div>
-          <div id="message-area">
-            {agendaMessages.length !== 0 && agendaMessages.map((message) => (
-              <div key={message}>
-                <Link href={{
-                  pathname: '/agenda',
-                  query: { message: message },
-                }}>
-                  <a>
-                    <p className="hover:text-gray-600 mt-2 mb-2 text-xl text-gray-500 whitespace-pre-wrap">{message}</p>
-                  </a>
-                </Link>
-                <hr />
-              </div>
-            ))}
+            <TextareaAutosize id="text-form" placeholder="テキストを入力" onChange={handleChange} className="text-black outline-none py-2 px-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize>
+            <div className="text-right">
+              <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded" onClick={quickStart} value={agendaMessage}>読み上げる</button>
+              <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded">保存</button>
+            </div>            
           </div>
         </div>
         <Footer />

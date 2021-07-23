@@ -1,9 +1,12 @@
-require('dotenv').config({path: ".env"})
 module.exports = {
     webpack: (config, { isServer }) => {
       if (!isServer) {
         config.node = {
-          fs: 'empty'
+          fs: 'empty',
+          child_process: 'empty',
+          net: 'empty',
+          dns: 'empty',
+          tls: 'empty',
         };
       }
   
