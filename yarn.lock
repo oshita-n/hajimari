@@ -760,6 +760,13 @@
   resolved "https://registry.npmjs.org/@hapi/hoek/-/hoek-9.2.0.tgz"
   integrity sha512-sqKVVVOe5ivCaXDWivIJYVSaEgdQK9ul7a4Kity5Iw7u9+wBAPbX1RMSnLLmp7O4Vzj0WOWwMAJsTL00xwaNug==
 
+"@maxim_mazurok/gapi.client.texttospeech@latest":
+  version "1.0.20210713"
+  resolved "https://registry.yarnpkg.com/@maxim_mazurok/gapi.client.texttospeech/-/gapi.client.texttospeech-1.0.20210713.tgz#19f589ecb4e92de656b1fcbbaba5d20acc367e2e"
+  integrity sha512-dQ1QNP3ddTe2RTz9byu0L5NW1B6MrCagHZvxl/YtPBSni4ZQ7nRsb8aWqLYBc7KI7wS2vqcXm6Wxl+w6oSK47w==
+  dependencies:
+    "@types/gapi.client" "*"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.npmjs.org/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz"
@@ -945,6 +952,30 @@
   version "0.0.47"
   resolved "https://registry.npmjs.org/@types/estree/-/estree-0.0.47.tgz"
   integrity sha512-c5ciR06jK8u9BstrmJyO97m+klJrrhCf9u3rLu3DEAJBirxRqSCvDQoYKmxuYwQI5SZChAWu+tq9oVlGRuzPAg==
+
+"@types/gapi.auth2@^0.0.55":
+  version "0.0.55"
+  resolved "https://registry.yarnpkg.com/@types/gapi.auth2/-/gapi.auth2-0.0.55.tgz#88523c1b8d4866ea64ec9cbecb9ecc90b80b88aa"
+  integrity sha512-chmROsbo28jI5or0aRP8X3aBuWkq8jJHj75al/C0BhI/qum8v7XSxxQ9aLpA2ULPWgWSyh6orn9ZCaUSA4iQCA==
+  dependencies:
+    "@types/gapi" "*"
+
+"@types/gapi.client.texttospeech@v1":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/gapi.client.texttospeech/-/gapi.client.texttospeech-1.0.0.tgz#993ab9a9188eea54e8e39ac382c73d9492bdad19"
+  integrity sha512-uhISofqqYuKHe+9coyIvWndj3c49EPA19WRKLvkRRvVcyDw4RuJu1VkWAj+LHUzW2G5tpa2Dglu2eGBGCF5YWQ==
+  dependencies:
+    "@maxim_mazurok/gapi.client.texttospeech" latest
+
+"@types/gapi.client@*":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@types/gapi.client/-/gapi.client-1.0.5.tgz#a6eb97e664fe51656c5b52258bd0afef28c76308"
+  integrity sha512-OTpbBMuzfC4lkvaomxqskI/iWRGW3zOZbDXZLNSyiuswTiSSGgILRLkg0POuZ4EgzEdaYaTlXpnXiCp07ri/Yw==
+
+"@types/gapi@*", "@types/gapi@^0.0.41":
+  version "0.0.41"
+  resolved "https://registry.yarnpkg.com/@types/gapi/-/gapi-0.0.41.tgz#c477ee4f0951c005869219fd10b456ae2bba437e"
+  integrity sha512-tmHO66z/f91JZCDqinj/nNvQEszsz/hBT4+MvCSKT5sDzl5Ld/oXZ8WaecCBjRLw2uWKUInUHM9MhEXWkOiNjw==
 
 "@types/glob@^7.1.1":
   version "7.1.4"
@@ -2574,6 +2605,11 @@ emojis-list@^2.0.0:
   resolved "https://registry.yarnpkg.com/emojis-list/-/emojis-list-2.1.0.tgz"
   integrity sha1-TapNnbAPmBmIDHn6RXrlsJof04k=
 
+emojis-list@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/emojis-list/-/emojis-list-3.0.0.tgz#5570662046ad29e2e916e71aae260abdff4f6a78"
+  integrity sha512-/kyM18EfinwXZbno9FyUGeFh87KC8HRQBQGildHZbEuRyWFOmv1U10o9BBp8XVZDVNNuQKyIGIu5ZYAAXJ0V2Q==
+
 encoding@0.1.13:
   version "0.1.13"
   resolved "https://registry.yarnpkg.com/encoding/-/encoding-0.1.13.tgz"
@@ -2896,6 +2932,19 @@ figures@^3.0.0:
   dependencies:
     escape-string-regexp "^1.0.5"
 
+file-loader@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/file-loader/-/file-loader-6.2.0.tgz#baef7cf8e1840df325e4390b4484879480eebe4d"
+  integrity sha512-qo3glqyTa61Ytg4u73GultjHGjdRyig3tG6lPtyX/jOEJvHif9uB0/OCI2Kif6ctF3caQTW2G5gym21oAsI4pw==
+  dependencies:
+    loader-utils "^2.0.0"
+    schema-utils "^3.0.0"
+
+file-saver@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/file-saver/-/file-saver-2.0.5.tgz#d61cfe2ce059f414d899e9dd6d4107ee25670c38"
+  integrity sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==
+
 filelist@^1.0.1:
   version "1.0.2"
   resolved "https://registry.npmjs.org/filelist/-/filelist-1.0.2.tgz"
@@ -3080,6 +3129,11 @@ functional-red-black-tree@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
+
+gapi-script@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/gapi-script/-/gapi-script-1.2.0.tgz#8106ad0abb36661ce4fab62ef6efada288d7169e"
+  integrity sha512-NKTVKiIwFdkO1j1EzcrWu/Pz7gsl1GmBmgh+qhuV2Ytls04W/Eg5aiBL91SCiBM9lU0PMu7p1hTVxhh1rPT5Lw==
 
 gaxios@^4.0.0:
   version "4.2.1"
@@ -4294,6 +4348,15 @@ loader-utils@1.2.3:
     big.js "^5.2.2"
     emojis-list "^2.0.0"
     json5 "^1.0.1"
+
+loader-utils@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/loader-utils/-/loader-utils-2.0.0.tgz#e4cace5b816d425a166b5f097e10cd12b36064b0"
+  integrity sha512-rP4F0h2RaWSvPEkD7BLDFQnvSf+nK+wr3ESUjNTyAGobqrijmW92zc+SO6d4p4B1wh7+B/Jg1mkQe5NYUEHtHQ==
+  dependencies:
+    big.js "^5.2.2"
+    emojis-list "^3.0.0"
+    json5 "^2.1.2"
 
 locate-path@^3.0.0:
   version "3.0.0"

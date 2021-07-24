@@ -1,12 +1,14 @@
 module.exports = {
     webpack: (config, { isServer }) => {
+      config.module.rules.push({
+        test: /\.mp3$/,
+        use: {
+          loader: 'file-loader',
+        },
+      });
       if (!isServer) {
         config.node = {
           fs: 'empty',
-          child_process: 'empty',
-          net: 'empty',
-          dns: 'empty',
-          tls: 'empty',
         };
       }
   
