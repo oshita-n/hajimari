@@ -32,11 +32,25 @@ export default function Home() {
 };
 
   function loadClient() {
-    if (process.browser) {
-      window.gapi.client.setApiKey(process.env.NEXT_PUBLIC_API_KEY);
-      return window.gapi.client.load("https://texttospeech.googleapis.com/$discovery/rest?version=v1")
-          .then(function() { console.log("GAPI client loaded for API"); },
-                function(err) { console.error("Error loading GAPI client for API", err); });
+    try {
+      if (process.browser) {
+        wait(2000)
+        window.gapi.client.setApiKey(process.env.NEXT_PUBLIC_API_KEY);
+        return window.gapi.client.load("https://texttospeech.googleapis.com/$discovery/rest?version=v1")
+            .then(function() { console.log("GAPI client loaded for API"); },
+                  function(err) { console.error("Error loading GAPI client for API", err); });
+      }
+    } catch (e) {
+      if (e instanceof TypeError) {
+        if (process.browser) {
+          wait(2000)
+          window.gapi.client.setApiKey(process.env.NEXT_PUBLIC_API_KEY);
+          return window.gapi.client.load("https://texttospeech.googleapis.com/$discovery/rest?version=v1")
+              .then(function() { console.log("GAPI client loaded for API"); },
+                    function(err) { console.error("Error loading GAPI client for API", err); });
+        }
+      }
+      return;
     }
   }
   // Make sure the client is loaded and sign-in is complete before calling this method.
@@ -80,7 +94,6 @@ export default function Home() {
   const [agendaMessage, setAgendaMessage] = useState("");
   
   useState(() => {
-    wait(3000)
     loadClient()
    })
   const handleChange = (e) => {
