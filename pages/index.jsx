@@ -50,7 +50,6 @@ export default function Home() {
                     function(err) { console.error("Error loading GAPI client for API", err); });
         }
       }
-      return;
     }
   }
   // Make sure the client is loaded and sign-in is complete before calling this method.
