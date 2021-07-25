@@ -42,7 +42,13 @@ export default function Home() {
       }
     } catch (e) {
       if (e instanceof TypeError) {
-        loadClient()
+        if (process.browser) {
+          wait(2000)
+          window.gapi.client.setApiKey(process.env.NEXT_PUBLIC_API_KEY);
+          return window.gapi.client.load("https://texttospeech.googleapis.com/$discovery/rest?version=v1")
+              .then(function() { console.log("GAPI client loaded for API"); },
+                    function(err) { console.error("Error loading GAPI client for API", err); });
+        }
       }
     }
   }
@@ -86,9 +92,9 @@ export default function Home() {
   }
   const [agendaMessage, setAgendaMessage] = useState("");
   
-  useState(() => {
-    loadClient()
-   })
+  // useState(() => {
+  //   loadClient()
+  //  })
   const handleChange = (e) => {
     setAgendaMessage(e.target.value);
   };
@@ -101,6 +107,7 @@ export default function Home() {
         <div className="container mx-auto w-2/3">
           <div className="mt-10 mb-5">
             <div className="text-right">
+              <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded" onClick={loadClient}>認証</button>
               <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded" onClick={getMP3} value={agendaMessage}>読み上げる</button>
               <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded">保存</button>
             </div> 
