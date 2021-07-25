@@ -80,7 +80,7 @@ export default function Home() {
   const [agendaMessage, setAgendaMessage] = useState("");
   
   useState(() => {
-    wait(1000)
+    wait(3000)
     loadClient()
    })
   const handleChange = (e) => {
