@@ -5,6 +5,15 @@ import { useState, useEffect } from 'react';
 import { saveAs } from 'file-saver';
 
 export default function Home() {
+
+  const wait = async (ms) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(); // setTimeoutの第一引数の関数として簡略化できる
+      }, ms)
+    });
+  }
+
   async function getMP3(){
     await execute()
   }
@@ -69,8 +78,10 @@ export default function Home() {
     }
   }
   const [agendaMessage, setAgendaMessage] = useState("");
-    useState(() => {
-      loadClient()
+  
+  useState(() => {
+    wait(1000)
+    loadClient()
    })
   const handleChange = (e) => {
     setAgendaMessage(e.target.value);
