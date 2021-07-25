@@ -42,13 +42,7 @@ export default function Home() {
       }
     } catch (e) {
       if (e instanceof TypeError) {
-        if (process.browser) {
-          wait(2000)
-          window.gapi.client.setApiKey(process.env.NEXT_PUBLIC_API_KEY);
-          return window.gapi.client.load("https://texttospeech.googleapis.com/$discovery/rest?version=v1")
-              .then(function() { console.log("GAPI client loaded for API"); },
-                    function(err) { console.error("Error loading GAPI client for API", err); });
-        }
+        loadClient()
       }
     }
   }
