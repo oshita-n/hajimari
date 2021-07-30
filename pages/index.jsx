@@ -2,39 +2,30 @@ import { Footer } from '../src/components/Footer.js';
 import { Header } from '../src/components/Header.js';
 import TextareaAutosize from 'react-textarea-autosize';
 import { useState, useEffect } from 'react';
-import { saveAs } from 'file-saver';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore'
+
+if (firebase.apps.length === 0) {
+  firebase.initializeApp({
+    apiKey: process.env.NEXT_PUBLIC_FB_APIKEY,
+    authDomain: process.env.NEXT_PUBLIC_DOMAIN,
+    projectId: process.env.NEXT_PUBLIC_PJID
+  });
+}
+
+var db = firebase.firestore();
 
 export default function Home() {
 
-  const wait = async (ms) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(); // setTimeoutの第一引数の関数として簡略化できる
-      }, ms)
-    });
-  }
 
   async function getMP3(){
     await execute()
   }
-  function createMP3Base64(base64, name) {
-    if (process.browser) {
-      // base64のデコード
-      var bin = window.atob(base64["result"]["audioContent"].replace(/^.*,/, ''));
-    }
-    // バイナリデータ化
-    var buffer = new Uint8Array(bin.length);
-    for (var i = 0; i < bin.length; i++) {
-        buffer[i] = bin.charCodeAt(i);
-    }
-    // ファイルオブジェクト生成(この例ではjpegファイル)
-    return new File([buffer.buffer], name, {type: "audio/mpeg"});
-};
 
   function loadClient() {
     try {
       if (process.browser) {
-        wait(2000)
         window.gapi.client.setApiKey(process.env.NEXT_PUBLIC_API_KEY);
         return window.gapi.client.load("https://texttospeech.googleapis.com/$discovery/rest?version=v1")
             .then(function() { console.log("GAPI client loaded for API"); },
@@ -43,7 +34,6 @@ export default function Home() {
     } catch (e) {
       if (e instanceof TypeError) {
         if (process.browser) {
-          wait(2000)
           window.gapi.client.setApiKey(process.env.NEXT_PUBLIC_API_KEY);
           return window.gapi.client.load("https://texttospeech.googleapis.com/$discovery/rest?version=v1")
               .then(function() { console.log("GAPI client loaded for API"); },
@@ -73,11 +63,21 @@ export default function Home() {
           })
               .then(function(response) {
                       // Handle the results here (response.result has the parsed body).
-                      console.log("Response", response);
-                      saveAs(createMP3Base64(response, "response.mp3"), "response.mp3")
-                      var audioElem = new Audio();
-                      audioElem.src = "response.mp3";
-                      audioElem.play();
+                      //console.log("Response", response);
+                      let date = new Date();
+                      db.collection("yomiageonsei").add({
+                        base64mp3: response,
+                        text: agendaMessage,
+                        timestamp: date.getTime()
+                      })
+                      .then(() => {
+                          console.log("Document written");
+                          loadMP3();
+                      })
+                      .catch((error) => {
+                          console.error("Error adding document: ", error);
+                      });
+                      // saveAs(createMP3Base64(response, "response.mp3"), "response.mp3")
                     },
                     function(err) { console.error("Execute error", err); });
         }
@@ -86,10 +86,39 @@ export default function Home() {
           window.gapi.auth2.init({client_id: process.env.NEXT_PUBLIC_CLIENT_ID});
         });
       }
+      
     } catch (e) {
       return null;
     }
   }
+
+  var docsData = new Array();
+  function loadMP3() {
+    console.log("load")
+    let i = 0;
+    db.collection("yomiageonsei").get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        docsData[i] = {};
+        docsData[i]['base64mp3'] = doc.data().base64mp3;
+        docsData[i]['text'] = doc.data().text;
+        i++;
+      });
+    });
+  }
+
+  function playMP3() {
+    console.log("play")
+    docsData.forEach((data) => {
+      if (data["text"] == agendaMessage) {
+        let base64MP3 = data["base64mp3"]["result"]["audioContent"].replace(/^.*,/, '')
+        var audioElem = new Audio();
+        audioElem.src = "data:audio/mpeg;base64," + base64MP3;
+        audioElem.play();
+        return true;
+      }
+    });
+  }
+  
   const [agendaMessage, setAgendaMessage] = useState("");
   
   // useState(() => {
@@ -110,6 +139,7 @@ export default function Home() {
               <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded" onClick={loadClient}>認証</button>
               <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded" onClick={getMP3} value={agendaMessage}>読み上げる</button>
               <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded">保存</button>
+              <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded"　onClick={playMP3}>再生</button>
             </div> 
             <TextareaAutosize id="text-form" placeholder="テキストを入力" onChange={handleChange} className="text-black outline-none py-2 px-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize>           
           </div>
