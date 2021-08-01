@@ -1,10 +1,11 @@
 import { Footer } from '../src/components/Footer.js';
 import { Header } from '../src/components/Header.js';
 import TextareaAutosize from 'react-textarea-autosize';
-import { useState, useEffect } from 'react';
+import {Fragment, useRef, useState, useEffect } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore'
+import { Dialog, Transition } from '@headlessui/react'
 
 if (firebase.apps.length === 0) {
   firebase.initializeApp({
@@ -16,8 +17,15 @@ if (firebase.apps.length === 0) {
 
 var db = firebase.firestore();
 
-export default function Home() {
+// ミリ秒間待機する
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
+export default function Home() {
+  useEffect(() => {
+    loadClient()
+  });
 
   async function getMP3(){
     await execute()
@@ -25,19 +33,21 @@ export default function Home() {
 
   function loadClient() {
     try {
-      if (process.browser) {
+      if (process.browser && login_state != true) {
         window.gapi.client.setApiKey(process.env.NEXT_PUBLIC_API_KEY);
         return window.gapi.client.load("https://texttospeech.googleapis.com/$discovery/rest?version=v1")
-            .then(function() { console.log("GAPI client loaded for API"); },
-                  function(err) { console.error("Error loading GAPI client for API", err); });
-      }
+            .then(function() { 
+              console.log("GAPI client loaded for API");
+              setlogin(true);
+            },function(err) { console.error("Error loading GAPI client for API", err); });
+      } 
     } catch (e) {
-      if (e instanceof TypeError) {
-        if (process.browser) {
-          window.gapi.client.setApiKey(process.env.NEXT_PUBLIC_API_KEY);
-          return window.gapi.client.load("https://texttospeech.googleapis.com/$discovery/rest?version=v1")
-              .then(function() { console.log("GAPI client loaded for API"); },
-                    function(err) { console.error("Error loading GAPI client for API", err); });
+        if (e instanceof TypeError) {
+          if (process.browser && login_state != true) {
+            window.gapi.client.setApiKey(process.env.NEXT_PUBLIC_API_KEY);
+            return window.gapi.client.load("https://texttospeech.googleapis.com/$discovery/rest?version=v1")
+                .then(function() { console.log("GAPI client loaded for API"); },
+                      function(err) { console.error("Error loading GAPI client for API", err); });
         }
       }
     }
@@ -49,7 +59,7 @@ export default function Home() {
           return window.gapi.client.texttospeech.text.synthesize({
             "resource": {
               "input": {
-                "text": agendaMessage
+                "text": text
               },
               "audioConfig": {
                 "audioEncoding": "MP3"
@@ -67,12 +77,13 @@ export default function Home() {
                       let date = new Date();
                       db.collection("yomiageonsei").add({
                         base64mp3: response,
-                        text: agendaMessage,
+                        text: text,
                         timestamp: date.getTime()
                       })
                       .then(() => {
                           console.log("Document written");
-                          loadMP3();
+                          loadMP3()
+                          playMP3()
                       })
                       .catch((error) => {
                           console.error("Error adding document: ", error);
@@ -91,10 +102,9 @@ export default function Home() {
       return null;
     }
   }
-
+  
   var docsData = new Array();
   function loadMP3() {
-    console.log("load")
     let i = 0;
     db.collection("yomiageonsei").get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
@@ -105,30 +115,39 @@ export default function Home() {
       });
     });
   }
-
-  function playMP3() {
-    console.log("play")
-    docsData.forEach((data) => {
-      if (data["text"] == agendaMessage) {
-        let base64MP3 = data["base64mp3"]["result"]["audioContent"].replace(/^.*,/, '')
-        var audioElem = new Audio();
-        audioElem.src = "data:audio/mpeg;base64," + base64MP3;
-        audioElem.play();
-        return true;
-      }
-    });
+  if (process.browser) {
+    var audioElem = new Audio()
+    audioElem.audioCurrentTime = 0
+  }
+  async function playMP3() {
+    setIsOpen(true)
+    await sleep(8000) // 書き込む間、3秒間待つ
+    setIsOpen(false)
+    if (playing == false) {
+      docsData.forEach((data) => {
+        if (data["text"] == text) {
+          setPlay(true)
+          let base64MP3 = data["base64mp3"]["result"]["audioContent"].replace(/^.*,/, '')
+          audioElem.src = "data:audio/mpeg;base64," + base64MP3;
+          audioElem.play();
+          return true
+        }
+      });
+      setPlay(false)
+    }
   }
   
-  const [agendaMessage, setAgendaMessage] = useState("");
-  
-  // useState(() => {
-  //   loadClient()
-  //  })
+  const [text, setText] = useState("")
+  const [login_state, setlogin] = useState(false)
+  const [playing, setPlay] = useState(false)
+
+
   const handleChange = (e) => {
-    setAgendaMessage(e.target.value);
+    setText(e.target.value);
   };
 
- 
+  let [isOpen, setIsOpen] = useState(false)
+
   return (
     <div>
       <Header />
@@ -136,10 +155,8 @@ export default function Home() {
         <div className="container mx-auto w-2/3">
           <div className="mt-10 mb-5">
             <div className="text-right">
-              <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded" onClick={loadClient}>認証</button>
-              <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded" onClick={getMP3} value={agendaMessage}>読み上げる</button>
+              <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded" onClick={getMP3} value={text}>読み上げる</button>
               <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded">保存</button>
-              <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded"　onClick={playMP3}>再生</button>
             </div> 
             <TextareaAutosize id="text-form" placeholder="テキストを入力" onChange={handleChange} className="text-black outline-none py-2 px-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize>           
           </div>
