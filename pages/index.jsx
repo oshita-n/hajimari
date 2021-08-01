@@ -120,9 +120,7 @@ export default function Home() {
     audioElem.audioCurrentTime = 0
   }
   async function playMP3() {
-    setIsOpen(true)
     await sleep(8000) // 書き込む間、3秒間待つ
-    setIsOpen(false)
     if (playing == false) {
       docsData.forEach((data) => {
         if (data["text"] == text) {
@@ -141,12 +139,9 @@ export default function Home() {
   const [login_state, setlogin] = useState(false)
   const [playing, setPlay] = useState(false)
 
-
   const handleChange = (e) => {
     setText(e.target.value);
   };
-
-  let [isOpen, setIsOpen] = useState(false)
 
   return (
     <div>
