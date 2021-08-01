@@ -5,7 +5,6 @@ import {Fragment, useRef, useState, useEffect } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore'
-import { Dialog, Transition } from '@headlessui/react'
 
 if (firebase.apps.length === 0) {
   firebase.initializeApp({
@@ -74,6 +73,7 @@ export default function Home() {
               .then(function(response) {
                       // Handle the results here (response.result has the parsed body).
                       //console.log("Response", response);
+                      fastPlayMP3(response);
                       let date = new Date();
                       db.collection("yomiageonsei").add({
                         base64mp3: response,
@@ -83,7 +83,7 @@ export default function Home() {
                       .then(() => {
                           console.log("Document written");
                           loadMP3()
-                          playMP3()
+                          // playMP3()
                       })
                       .catch((error) => {
                           console.error("Error adding document: ", error);
@@ -133,6 +133,16 @@ export default function Home() {
       });
       setPlay(false)
     }
+  }
+
+  function fastPlayMP3(response) {
+    console.log(response)
+    if (playing == false) {
+      audioElem.src = "data:audio/mpeg;base64," + response["result"]["audioContent"].replace(/^.*,/, '');
+      audioElem.play();
+      setPlay(true)
+    }
+    setPlay(false)
   }
   
   const [text, setText] = useState("")
