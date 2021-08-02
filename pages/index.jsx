@@ -30,7 +30,8 @@ export default function Home() {
     await execute()
   }
 
-  function loadClient() {
+  async function loadClient() {
+    await sleep(1000)
     try {
       if (process.browser && login_state != true) {
         window.gapi.client.setApiKey(process.env.NEXT_PUBLIC_API_KEY);
