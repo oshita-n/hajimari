@@ -828,6 +828,11 @@
   resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-0.0.0-112270d.tgz#5bae38775e628859f34caccfa92d460444c2f4ee"
   integrity sha512-Z26VeFrd6ah/9Ogr5aKskyM8RNHuM7lteYkMqqas3fX4lV6W9Uu6rSlEwWXJLuLi5jL6/tDdA22PRlv89yoBIg==
 
+"@heroicons/react@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@heroicons/react/-/react-1.0.3.tgz#4dae106c6019e3250e36401b55b599ad41a68273"
+  integrity sha512-wdzWbDiFKzeL6xFJsgY2PqvDkx4hFmQDpEFRVj872EA71XOjr8g0DQj5rHWm0y7LwfGOFL0eQmEiMbTyGNOnTQ==
+
 "@maxim_mazurok/gapi.client.texttospeech@latest":
   version "1.0.20210713"
   resolved "https://registry.yarnpkg.com/@maxim_mazurok/gapi.client.texttospeech/-/gapi.client.texttospeech-1.0.20210713.tgz#19f589ecb4e92de656b1fcbbaba5d20acc367e2e"

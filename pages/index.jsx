@@ -5,6 +5,10 @@ import {Fragment, useRef, useState, useEffect } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore'
+import { Menu, Transition, Dialog } from '@headlessui/react'
+import { CameraIcon } from '@heroicons/react/solid'
+import { PhotographIcon } from '@heroicons/react/solid'
+
 
 if (firebase.apps.length === 0) {
   firebase.initializeApp({
@@ -25,6 +29,18 @@ export default function Home() {
   useEffect(() => {
     loadClient()
   });
+
+  let [isOpen, setIsOpen] = useState(false)
+
+  function closeModal() {
+    setIsOpen(false)
+  }
+
+  function openModal() {
+    setIsOpen(true)
+    insertCheckbox()
+  }
+
 
   async function getMP3(){
     await execute()
@@ -141,25 +157,65 @@ export default function Home() {
   }
   
   const [text, setText] = useState("")
+  const [checkBox, setCheckBox] = useState("")
   const [login_state, setlogin] = useState(false)
 
+  function insertCheckbox() {
+    console.log(checkBox)
+    let cb = <input type="checkbox" name="task" value="ok" />
+    setCheckBox([checkBox, <br/>, cb])
+  }
   const handleChange = (e) => {
     setText(e.target.value);
   };
+  const textRef = useRef(null);
 
   return (
     <div>
       <Header />
-      <div className="container mx-auto">
+      <div className="flex container mx-auto">
+        <div className="group container mx-auto w-2/6 text-right">
+          {checkBox}
+          <Menu as="div" className="relative inline-block text-left text-right hidden group-hover:block">
+              <div>
+                <Menu.Button className="text-black text-3xl">
+                  +
+                </Menu.Button>
+              </div>
+              <Transition
+                as={Fragment}
+                enter="transition ease-out duration-100"
+                enterFrom="transform opacity-0 scale-95"
+                enterTo="transform opacity-100 scale-100"
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100"
+                leaveTo="transform opacity-0 scale-95"
+              >
+                <Menu.Items className="absolute right-0 w-36 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <div className="px-1 py-1 ">
+                    <Menu.Item>
+                      <button
+                        className="text-gray-900 flex rounded-md items-center w-full px-2 py-2 text-sm"
+                        onClick={openModal}
+                      >
+                        Add CheckBox
+                      </button>
+                    </Menu.Item>
+                  </div>                 
+                </Menu.Items>
+              </Transition>
+            </Menu>
+        </div>
         <div className="container mx-auto w-2/3">
           <div className="mt-10 mb-5">
             <div className="text-right">
               <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded" onClick={getMP3} value={text}>読み上げる</button>
               <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded">保存</button>
             </div> 
-            <TextareaAutosize id="text-form" placeholder="テキストを入力" onChange={handleChange} className="text-black outline-none py-2 px-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize>           
+            <TextareaAutosize  placeholder="テキストを入力" onChange={handleChange} className="text-black outline-none py-2 px-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize>           
           </div>
         </div>
+        <div className="container mx-auto w-2/6"></div>
         <Footer />
     </div>
   </div>
