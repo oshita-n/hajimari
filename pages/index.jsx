@@ -118,7 +118,6 @@ export default function Home() {
   }
   if (process.browser) {
     var audioElem = new Audio()
-    audioElem.audioCurrentTime = 0
   }
   async function playMP3() {
     await sleep(8000) // 書き込む間、3秒間待つ
@@ -137,18 +136,12 @@ export default function Home() {
   }
 
   function fastPlayMP3(response) {
-    console.log(response)
-    if (playing == false) {
       audioElem.src = "data:audio/mpeg;base64," + response["result"]["audioContent"].replace(/^.*,/, '');
       audioElem.play();
-      setPlay(true)
-    }
-    setPlay(false)
   }
   
   const [text, setText] = useState("")
   const [login_state, setlogin] = useState(false)
-  const [playing, setPlay] = useState(false)
 
   const handleChange = (e) => {
     setText(e.target.value);
