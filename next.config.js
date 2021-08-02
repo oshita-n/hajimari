@@ -1,9 +1,14 @@
-require('dotenv').config({path: ".env"})
 module.exports = {
     webpack: (config, { isServer }) => {
+      config.module.rules.push({
+        test: /\.mp3$/,
+        use: {
+          loader: 'file-loader',
+        },
+      });
       if (!isServer) {
         config.node = {
-          fs: 'empty'
+          fs: 'empty',
         };
       }
   
