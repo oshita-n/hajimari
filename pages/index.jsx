@@ -168,18 +168,13 @@ export default function Home() {
       setText2(e.target.value);
     };
     return (
-      <div className="group flex"><TextareaAutosize  placeholder="テキストを入力" onChange={handleChange2} className="outline-none py-2 p-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize><button className="mr-0 mx-auto hidden group-hover:block"><PlayIcon onClick={() => getMP3(text2)} className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button><button className="mr-0 mx-auto hidden group-hover:block"><TrashIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button></div>
+      <div className="group flex"><TextareaAutosize  placeholder="テキストを入力" onChange={handleChange2} className="outline-none py-2 p-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><PlayIcon onClick={() => getMP3(text2)} className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><TrashIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button></div>
     );
   }
 
   const [checkBox, setCheckBox] = useState("")
   const [login_state, setlogin] = useState(false)
   const [tbElements, setTbElement] = useState([])
-
-  function insertCheckBox() {
-    let cb = <input type="checkbox" name="task" value="ok" />
-    setCheckBox([cb, <br/>, checkBox])
-  }
 
   const handleChange = (e) => {
     setText(e.target.value);
@@ -211,14 +206,6 @@ export default function Home() {
                     <Menu.Item>
                       <button
                         className="text-gray-900 flex rounded-md items-center w-full px-2 py-2 text-sm"
-                        onClick={openModal1}
-                      >
-                        Add CheckBox
-                      </button>
-                    </Menu.Item>
-                    <Menu.Item>
-                      <button
-                        className="text-gray-900 flex rounded-md items-center w-full px-2 py-2 text-sm"
                         onClick={openModal2}
                       >
                         Add TextBox
@@ -236,8 +223,8 @@ export default function Home() {
             </div>
             <div className="group flex">
               <TextareaAutosize  placeholder="テキストを入力" onChange={handleChange} className="text-black outline-none py-2 px-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize>           
-              <button className="hidden group-hover:block mr-0 mx-auto"><PlayIcon onClick={() => getMP3(text)} className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button>
-              <button className="hidden group-hover:block mr-0 mx-auto"><TrashIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button>
+              <button className="hidden group-hover:block mr-0 mx-auto mb-auto my-3"><PlayIcon onClick={() => getMP3(text)} className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button>
+              <button className="hidden group-hover:block mr-0 mx-auto mb-auto my-3"><TrashIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button>
             </div>
             {tbElements}
           </div>
