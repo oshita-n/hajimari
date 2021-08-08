@@ -133,7 +133,7 @@ export default function Home() {
                       let date = new Date();
                       db.collection("yomiageonsei").add({
                         base64mp3: response,
-                        text: text,
+                        text: sText,
                         timestamp: date.getTime()
                       })
                       .then(() => {
@@ -181,13 +181,23 @@ export default function Home() {
   }
   
   function TextBox(props) {
-    const [text, setText] = useState("");
-    const handleChange = (e) => {
-      setText(e.target.value);
-    };
-    return (
-      <div className="group flex"><TextareaAutosize  placeholder="テキストを入力" defaultValue={props.value} ref={eval(props.refs)} onChange={handleChange} className="outline-none py-2 p-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><PlayIcon onClick={() => getMP3(text)} className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><TrashIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button></div>
-    );
+    if(props.value) {
+      const [text, setText] = useState(props.value[0]);
+      const handleChange = (e) => {
+        setText(e.target.value);
+      };
+      return (
+        <div className="group flex"><TextareaAutosize  placeholder="テキストを入力" defaultValue={props.value} ref={eval(props.refs)} onChange={handleChange} className="outline-none py-2 p-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><PlayIcon onClick={() => getMP3(text)} className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><TrashIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button></div>
+      );
+    } else {
+      const [text, setText] = useState(null);
+      const handleChange = (e) => {
+        setText(e.target.value);
+      };
+      return (
+        <div className="group flex"><TextareaAutosize  placeholder="テキストを入力" defaultValue={props.value} ref={eval(props.refs)} onChange={handleChange} className="outline-none py-2 p-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><PlayIcon onClick={() => getMP3(text)} className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><TrashIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button></div>
+      );
+    }
   }
 
   const [login_state, setlogin] = useState(false)
