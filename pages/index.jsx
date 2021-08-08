@@ -187,7 +187,7 @@ export default function Home() {
         setText(e.target.value);
       };
       return (
-        <div className="group flex"><TextareaAutosize  placeholder="テキストを入力" defaultValue={props.value} ref={eval(props.refs)} onChange={handleChange} className="outline-none py-2 p-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><PlayIcon onClick={() => getMP3(text)} className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><TrashIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button></div>
+        <div className="group flex"><TextareaAutosize  placeholder="テキストを入力" defaultValue={props.value} ref={eval(props.refs)} onChange={handleChange} className="hover:bg-green-200	outline-none py-2 p-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><PlayIcon onClick={() => getMP3(text)} className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><TrashIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button></div>
       );
     } else {
       const [text, setText] = useState(null);
@@ -195,7 +195,7 @@ export default function Home() {
         setText(e.target.value);
       };
       return (
-        <div className="group flex"><TextareaAutosize  placeholder="テキストを入力" defaultValue={props.value} ref={eval(props.refs)} onChange={handleChange} className="outline-none py-2 p-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><PlayIcon onClick={() => getMP3(text)} className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><TrashIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button></div>
+        <div className="group flex"><TextareaAutosize  placeholder="テキストを入力" defaultValue={props.value} ref={eval(props.refs)} onChange={handleChange} className="hover:bg-green-200 outline-none py-2 p-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><PlayIcon onClick={() => getMP3(text)} className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><TrashIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button></div>
       );
     }
   }
@@ -240,7 +240,7 @@ export default function Home() {
         </div>
         <div className="container mx-auto w-2/3">
           <div className="mt-10 mb-5">
-            <div className="text-right">
+            <div className="text-right mb-5">
               <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded"　onClick={save}>Save</button>
               <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded"　onClick={loadData}>Load</button>
             </div>
