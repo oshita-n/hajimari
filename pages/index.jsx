@@ -8,7 +8,6 @@ import 'firebase/firestore'
 import { Menu, Transition, Dialog } from '@headlessui/react'
 import { PlayIcon, TrashIcon } from '@heroicons/react/solid'
 
-
 if (firebase.apps.length === 0) {
   firebase.initializeApp({
     apiKey: process.env.NEXT_PUBLIC_FB_APIKEY,
@@ -27,6 +26,7 @@ function sleep(ms) {
 export default function Home() {
   useEffect(() => {
     loadClient()
+    console.log(JSON.parse(localStorage.getItem("textbox")))
   });
 
   let [isOpen, setIsOpen] = useState(false)
@@ -35,16 +35,51 @@ export default function Home() {
     setIsOpen(false)
   }
 
-  function openModal1() {
-    setIsOpen(true)
-    insertCheckBox()
+  let [count, setCount] = useState(1);
+
+  const tb0 =  useRef(null);
+  const tb1 =  useRef(null);
+  const tb2 =  useRef(null);
+  const tb3 =  useRef(null);
+  const tb4 =  useRef(null);
+  const tb5 =  useRef(null);
+  const tb6 =  useRef(null);
+  const tb7 =  useRef(null);
+  const tb8 =  useRef(null);
+  const tb9 =  useRef(null);
+  const tb10=  useRef(null);
+  const tb11=  useRef(null);
+  const tb12=  useRef(null);
+  const tb13=  useRef(null);
+  const tb14=  useRef(null);
+  const tb15=  useRef(null);
+  
+  function loadData() {
+    setCount(parseInt(localStorage.getItem("count")))
+    var localArray = JSON.parse(localStorage.getItem("textbox"))
+    var tmpArray = []
+    if (localArray != null) {
+      for (let i=0; i<localArray.length; i++) {
+        tmpArray.push(<TextBox value={localArray[i]} refs={"tb" + i} />)
+      }
+      setTbElement([tmpArray])
+    } 
   }
 
-  function openModal2() {
-    setIsOpen(true)
-    setTbElement([<TextBox value="tako" />, tbElements])
+  function save() {
+    for (let i=0; i<count;i++) {
+      tbArray.push([eval("tb" + (i)).current.value])
+    }
+    localStorage.setItem("textbox", JSON.stringify(tbArray));
+    localStorage.setItem("count", count);
   }
 
+  var tbArray = [];
+  function openModal() {
+    setIsOpen(true)
+    setCount((prevCount) => prevCount + 1)
+    setTbElement([tbElements, <TextBox refs={"tb" + count}/>])
+  }
 
   async function getMP3(sText){
     await execute(sText)
@@ -139,53 +174,30 @@ export default function Home() {
   if (process.browser) {
     var audioElem = new Audio()
   }
-  async function playMP3() {
-    await sleep(8000) // 書き込む間、3秒間待つ
-    if (playing == false) {
-      docsData.forEach((data) => {
-        if (data["text"] == text) {
-          setPlay(true)
-          let base64MP3 = data["base64mp3"]["result"]["audioContent"].replace(/^.*,/, '')
-          audioElem.src = "data:audio/mpeg;base64," + base64MP3;
-          audioElem.play();
-          return true
-        }
-      });
-      setPlay(false)
-    }
-  }
 
   function fastPlayMP3(response) {
       audioElem.src = "data:audio/mpeg;base64," + response["result"]["audioContent"].replace(/^.*,/, '');
       audioElem.play();
   }
   
-  const [text, setText] = useState("")
-
   function TextBox(props) {
-    const [text2, setText2] = useState("")
-    const handleChange2 = (e) => {
-      setText2(e.target.value);
+    const [text, setText] = useState("");
+    const handleChange = (e) => {
+      setText(e.target.value);
     };
     return (
-      <div className="group flex"><TextareaAutosize  placeholder="テキストを入力" onChange={handleChange2} className="outline-none py-2 p-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><PlayIcon onClick={() => getMP3(text2)} className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><TrashIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button></div>
+      <div className="group flex"><TextareaAutosize  placeholder="テキストを入力" defaultValue={props.value} ref={eval(props.refs)} onChange={handleChange} className="outline-none py-2 p-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><PlayIcon onClick={() => getMP3(text)} className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><TrashIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button></div>
     );
   }
 
-  const [checkBox, setCheckBox] = useState("")
   const [login_state, setlogin] = useState(false)
-  const [tbElements, setTbElement] = useState([])
-
-  const handleChange = (e) => {
-    setText(e.target.value);
-  };
+  const [tbElements, setTbElement] = useState([<TextBox refs={tb0}/>])
 
   return (
     <div>
       <Header />
       <div className="flex container mx-auto">
         <div className="group container mx-auto w-2/6 text-right">
-          {checkBox}
           <Menu as="div" className="relative inline-block text-left text-right hidden group-hover:block">
               <div>
                 <Menu.Button className="text-black text-3xl">
@@ -206,7 +218,7 @@ export default function Home() {
                     <Menu.Item>
                       <button
                         className="text-gray-900 flex rounded-md items-center w-full px-2 py-2 text-sm"
-                        onClick={openModal2}
+                        onClick={openModal}
                       >
                         Add TextBox
                       </button>
@@ -219,12 +231,13 @@ export default function Home() {
         <div className="container mx-auto w-2/3">
           <div className="mt-10 mb-5">
             <div className="text-right">
-              <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded">保存</button>
+              <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded"　onClick={save}>Save</button>
+              <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded"　onClick={loadData}>Load</button>
             </div>
             <div className="group flex">
-              <TextareaAutosize  placeholder="テキストを入力" onChange={handleChange} className="text-black outline-none py-2 px-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize>           
-              <button className="hidden group-hover:block mr-0 mx-auto mb-auto my-3"><PlayIcon onClick={() => getMP3(text)} className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button>
-              <button className="hidden group-hover:block mr-0 mx-auto mb-auto my-3"><TrashIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button>
+              {/* <TextareaAutosize  placeholder="テキストを入力" onChange={handleChange} className="text-black outline-none py-2 px-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize>            */}
+              {/* <button className="hidden group-hover:block mr-0 mx-auto mb-auto my-3"><PlayIcon onClick={() => getMP3(text)} className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button>
+              <button className="hidden group-hover:block mr-0 mx-auto mb-auto my-3"><TrashIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button> */}
             </div>
             {tbElements}
           </div>
