@@ -26,30 +26,13 @@ function sleep(ms) {
 export default function Home() {
   useEffect(() => {
     loadClient()
-    console.log(JSON.parse(localStorage.getItem("textbox")))
   });
-
-  let [isOpen, setIsOpen] = useState(false)
-
-
   let [count, setCount] = useState(1);
 
-  const tb0 =  useRef(null);
-  const tb1 =  useRef(null);
-  const tb2 =  useRef(null);
-  const tb3 =  useRef(null);
-  const tb4 =  useRef(null);
-  const tb5 =  useRef(null);
-  const tb6 =  useRef(null);
-  const tb7 =  useRef(null);
-  const tb8 =  useRef(null);
-  const tb9 =  useRef(null);
-  const tb10=  useRef(null);
-  const tb11=  useRef(null);
-  const tb12=  useRef(null);
-  const tb13=  useRef(null);
-  const tb14=  useRef(null);
-  const tb15=  useRef(null);
+  var tbRef = useRef([]);
+  for(let i=0;i<1024;i++) {
+    tbRef.current[i] = useRef(null);
+  }
   
   function loadData() {
     setCount(parseInt(localStorage.getItem("count")))
@@ -57,7 +40,7 @@ export default function Home() {
     var tmpArray = []
     if (localArray != null) {
       for (let i=0; i<localArray.length; i++) {
-        tmpArray.push(<TextBox value={localArray[i]} refs={"tb" + i} />)
+        tmpArray.push(<TextBox value={localArray[i]} refs={i} />)
       }
       setTbElement([tmpArray])
     } 
@@ -65,7 +48,7 @@ export default function Home() {
 
   function save() {
     for (let i=0; i<count;i++) {
-      tbArray.push([eval("tb" + (i)).current.value])
+      tbArray.push([tbRef.current[i].current.value])
     }
     localStorage.setItem("textbox", JSON.stringify(tbArray));
     localStorage.setItem("count", count);
@@ -73,10 +56,9 @@ export default function Home() {
 
   var tbArray = [];
   function addTextBox() {
-    setCount((prevCount) => prevCount + 1)
-    console.log(count)
-    setTbElement([tbElements, <TextBox refs={"tb" + count}/>])
-    localStorage.setItem("count", count);
+    setCount((prevCount) => prevCount + 1);
+    setTbElement([tbElements, <TextBox refs={count} id={count} />]);
+    //localStorage.setItem("count", count);
   }
 
   async function getMP3(sText){
@@ -126,22 +108,21 @@ export default function Home() {
           })
               .then(function(response) {
                       // Handle the results here (response.result has the parsed body).
-                      //console.log("Response", response);
                       fastPlayMP3(response);
-                      let date = new Date();
-                      db.collection("yomiageonsei").add({
-                        base64mp3: response,
-                        text: sText,
-                        timestamp: date.getTime()
-                      })
-                      .then(() => {
-                          console.log("Document written");
-                          loadMP3()
-                          // playMP3()
-                      })
-                      .catch((error) => {
-                          console.error("Error adding document: ", error);
-                      });
+                      // let date = new Date();
+                      // db.collection("yomiageonsei").add({
+                      //   base64mp3: response,
+                      //   text: sText,
+                      //   timestamp: date.getTime()
+                      // })
+                      // .then(() => {
+                      //     // console.log("Document written");
+                      //     loadMP3()
+                      //     // playMP3()
+                      // })
+                      // .catch((error) => {
+                      //     console.error("Error adding document: ", error);
+                      // });
                       // saveAs(createMP3Base64(response, "response.mp3"), "response.mp3")
                     },
                     function(err) { console.error("Execute error", err); });
@@ -186,7 +167,7 @@ export default function Home() {
       };
       return (
         <div className="group">
-          <div className="group flex mt-5"><TextareaAutosize  placeholder="テキストを入力" defaultValue={props.value} ref={eval(props.refs)} onChange={handleChange} className="hover:bg-green-200 border-2 rounded-md border-gray-300 outline-none py-2 p-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><PlayIcon onClick={() => getMP3(text)} className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><TrashIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button></div>
+          <div className="group flex mt-5"><TextareaAutosize  placeholder="テキストを入力" defaultValue={props.value} ref={tbRef.current[props.refs]} onChange={handleChange} className="hover:bg-green-200 border-2 rounded-md border-gray-300 outline-none py-2 p-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize><button className="mr-0 mx-auto mb-auto my-0 hidden group-hover:block"><PlayIcon onClick={() => getMP3(text)} className="h-8 w-8 text-gray-400 hover:text-gray-500" /></button></div>
         </div>
       );
     } else {
@@ -196,14 +177,16 @@ export default function Home() {
       };
       return (
         <div className="group">
-          <div className="group flex mt-5"><TextareaAutosize  placeholder="テキストを入力" defaultValue={props.value} ref={eval(props.refs)} onChange={handleChange} className="hover:bg-green-200 border-2 rounded-md border-gray-300 outline-none py-2 p-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><PlayIcon onClick={() => getMP3(text)} className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button><button className="mr-0 mx-auto mb-auto my-3 hidden group-hover:block"><TrashIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" /></button></div>
+          <div className="group flex mt-5"><TextareaAutosize  placeholder="テキストを入力" defaultValue={props.value} ref={tbRef.current[props.refs]} onChange={handleChange} className="hover:bg-green-200 border-2 rounded-md border-gray-300 outline-none py-2 p-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize><button className="mr-0 mx-auto mb-auto my-0 hidden group-hover:block"><PlayIcon onClick={() => getMP3(text)} className="h-8 w-8 text-gray-400 hover:text-gray-500" /></button></div>
         </div>
       );
     }
   }
 
+
+
   const [login_state, setlogin] = useState(false)
-  const [tbElements, setTbElement] = useState([<TextBox refs={tb0}/>])
+  const [tbElements, setTbElement] = useState([<TextBox refs={0} id={count}/>])
 
   return (
     <div>
