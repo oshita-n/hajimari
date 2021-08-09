@@ -74,7 +74,6 @@ export default function Home() {
   var tbArray = [];
   function addTextBox() {
     setCount((prevCount) => prevCount + 1)
-    setCount(parseInt(localStorage.getItem("count")))
     console.log(count)
     setTbElement([tbElements, <TextBox refs={"tb" + count}/>])
     localStorage.setItem("count", count);
