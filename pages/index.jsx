@@ -26,7 +26,10 @@ function sleep(ms) {
 export default function Home() {
   useEffect(() => {
     loadClient()
-  });
+    loadData()
+  }, []);
+
+  const [tbElements, setTbElement] = useState([])
   let [count, setCount] = useState(1);
 
   var tbRef = useRef([]);
@@ -35,33 +38,45 @@ export default function Home() {
   }
   
   function loadData() {
-    setCount(parseInt(localStorage.getItem("count")))
+    console.log(tbElements)
+    if (tbElements.length == 0) {
+      console.log("aaaaa")
+      setTbElement([<TextBox refs={0}/>])
+    }
     var localArray = JSON.parse(localStorage.getItem("textbox"))
     var tmpArray = []
-    if (localArray != null) {
+    console.log("loadData=" + localArray)
+    if (localArray) {
+      setCount(parseInt(localStorage.getItem("count")))
       for (let i=0; i<localArray.length; i++) {
+        console.log(localArray[i])
         tmpArray.push(<TextBox value={localArray[i]} refs={i} />)
       }
-      setTbElement([tmpArray])
+      console.log(tmpArray)
+      console.log(localArray.length, count)
+      setTbElement(tmpArray)
     } 
   }
 
   function save() {
+    var tbArray = [];
     for (let i=0; i<count;i++) {
       tbArray.push([tbRef.current[i].current.value])
     }
+    console.log("save=" + tbArray)
     localStorage.setItem("textbox", JSON.stringify(tbArray));
     localStorage.setItem("count", count);
   }
 
-  var tbArray = [];
   function addTextBox() {
+    console.log("addTextBox")
+    console.log('add='+count)
+    setTbElement([...tbElements, <TextBox refs={count}/>]);
     setCount((prevCount) => prevCount + 1);
-    setTbElement([tbElements, <TextBox refs={count} id={count} />]);
-    //localStorage.setItem("count", count);
   }
 
   async function getMP3(sText){
+    console.log(sText)
     await execute(sText)
   }
 
@@ -161,6 +176,7 @@ export default function Home() {
   
   function TextBox(props) {
     if(props.value) {
+      console.log("こっちが呼ばれた" + props.value[0])
       const [text, setText] = useState(props.value[0]);
       const handleChange = (e) => {
         setText(e.target.value);
@@ -171,6 +187,7 @@ export default function Home() {
         </div>
       );
     } else {
+      console.log("こっちが呼ばれたぜよ")
       const [text, setText] = useState(null);
       const handleChange = (e) => {
         setText(e.target.value);
@@ -183,10 +200,7 @@ export default function Home() {
     }
   }
 
-
-
   const [login_state, setlogin] = useState(false)
-  const [tbElements, setTbElement] = useState([<TextBox refs={0} id={count}/>])
 
   return (
     <div>
@@ -195,8 +209,7 @@ export default function Home() {
         <div className="container mx-auto w-2/3">
           <div className="mt-10 mb-5">
             <div className="text-right mb-5">
-              <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded"　onClick={save}>Save</button>
-              <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded"　onClick={loadData}>Load</button>
+              <button className="ml-2 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded"　onClick={save}>保存</button>
             </div>
             <div className="group">
               {tbElements}
