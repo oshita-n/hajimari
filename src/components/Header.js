@@ -10,8 +10,10 @@ export function Header() {
             <script src="https://apis.google.com/js/api.js"></script>
             <script src="https://apis.google.com/js/client.js"></script>
         </Head>
-        <div className="mt-2 ml-5 mb-2 font-bold text-xl">
-            <Link href="/">Oto</Link>
+        <div className="bg-header">
+            <div className="text-white pt-2 ml-5 pb-2 font-bold text-xl">
+                <Link href="/">Oto</Link>
+            </div>
         </div>
         <hr />
     </div>
