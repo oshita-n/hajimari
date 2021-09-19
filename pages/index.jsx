@@ -155,7 +155,7 @@ export default function Home() {
       };
       return (
         <div className="group">
-          <div className="group flex mt-5"><TextareaAutosize  placeholder="テキストを入力" defaultValue={props.value} ref={tbRef.current[props.refs]} onChange={handleChange} className="hover:bg-green-200 border-2 rounded-md border-gray-300 outline-none py-2 p-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize><button className="mr-0 mx-auto mb-auto my-0k"><PlayIcon onClick={() => getMP3(text)} className="h-8 w-8 text-gray-400 hover:text-gray-500" /></button></div>
+          <div className="group flex mt-5"><TextareaAutosize  placeholder="テキストを入力" defaultValue={props.value} ref={tbRef.current[props.refs]} onChange={handleChange} className="hover:bg-gray-300 bg-card border-2 rounded-md border-gray-300 outline-none py-2 p-3 resize-none overflow-hidden w-full" minRows={1}></TextareaAutosize><button className="mr-0 mx-auto mb-auto my-0k"><PlayIcon onClick={() => getMP3(text)} className="h-8 w-8 text-gray-400 hover:text-gray-500" /></button></div>
         </div>
       );
     }
